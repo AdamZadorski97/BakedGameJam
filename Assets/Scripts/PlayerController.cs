@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForce = 5f; // The force applied upwards when jumping
 
     private Vector3 moveInput;
+    private Vector2 lookInput;
 
     [SerializeField] private Transform groundCheck; // A transform positioned at the bottom of the player used for grounding checks
     [SerializeField] private float groundDistance = 0.2f; // The radius of the grounding check
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
         {
             Vector2 input = InputController.Instance.player1MoveValue;
             moveInput = new Vector3(input.x, 0, input.y);
+            lookInput = InputController.Instance.Player1Actions.lookAction.Value;
             if (isGrounded && InputController.Instance.Player1Actions.jumpAction.WasPressed)
             {
                 Jump();
@@ -41,6 +43,7 @@ public class PlayerController : MonoBehaviour
         {
             Vector2 input = InputController.Instance.player2MoveValue;
             moveInput = new Vector3(input.x, 0, input.y);
+            lookInput = InputController.Instance.Player2Actions.lookAction.Value;
             if (isGrounded && InputController.Instance.Player2Actions.jumpAction.WasPressed)
             {
                 Jump();
@@ -60,21 +63,20 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Apply movement
+        // Apply movement...
         rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
 
-        // Rotate towards the movement direction
-        if (moveInput != Vector3.zero)
+        // Determine the rotation direction based on second stick input or movement input
+        Vector3 intendedDirection = lookInput.magnitude > 0.1f ? new Vector3(lookInput.x, 0, lookInput.y) : moveInput;
+        if (intendedDirection != Vector3.zero)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(moveInput);
+            Quaternion targetRotation = Quaternion.LookRotation(intendedDirection);
             rb.rotation = Quaternion.Lerp(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
         }
     }
 
     private void Jump()
     {
-        Debug.Log("Jump");
-        // Apply a vertical force to the Rigidbody to simulate jumping
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 }
