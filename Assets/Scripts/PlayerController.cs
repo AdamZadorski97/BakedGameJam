@@ -19,7 +19,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private Transform groundCheck; // A transform positioned at the bottom of the player used for grounding checks
     [SerializeField] private float groundDistance = 0.2f; // The radius of the grounding check
-    [SerializeField] private LayerMask groundMask; // A LayerMask that specifies the layers considered as ground
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask wallMask;
     [SerializeField] private Animator animator;
     private bool isGrounded;
 
@@ -63,8 +64,11 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Apply movement...
-        rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+        if (!IsObstacleInFront())
+        {
+            rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+        }
+        
 
         // Determine the rotation direction based on second stick input or movement input
         Vector3 intendedDirection = lookInput.magnitude > 0.1f ? new Vector3(lookInput.x, 0, lookInput.y) : moveInput;
@@ -78,5 +82,34 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
+
+
+    private bool IsObstacleInFront()
+    {
+        RaycastHit hit;
+        float checkDistance = 0.25f; // Adjust based on your needs
+        Vector3 direction = moveInput.normalized;
+
+        // Only check for obstacles if there's input from the player
+        if (moveInput.magnitude > 0.1f)
+        {
+            Vector3 rayOrigin = transform.position - new Vector3(0, 0.2f, 0); // Slightly raise the ray origin to avoid ground collision
+
+            // Perform a raycast in front of the player
+            bool isHit = Physics.Raycast(rayOrigin, direction, out hit, checkDistance, wallMask);
+
+            // Debugging: Draw the ray in the Scene view
+            Debug.DrawRay(rayOrigin, direction * checkDistance, isHit ? Color.red : Color.green);
+
+            if (isHit)
+            {
+                // Debugging: Log hit information
+                Debug.Log($"Obstacle hit at {hit.point}, distance: {hit.distance}, hit object: {hit.collider.gameObject.name}");
+                return true; // An obstacle is in front of the player
+            }
+        }
+
+        return false; // No obstacle in front of the player
     }
 }
