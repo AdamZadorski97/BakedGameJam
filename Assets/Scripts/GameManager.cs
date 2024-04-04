@@ -1,4 +1,5 @@
 using DG.Tweening;
+using InControl;
 using System;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour
     private bool isGamePaused = false;
     public static event Action OnGamePaused;
     public static event Action OnGameResumed;
+    public static event Action OnGameOver;
 
     // Awake is called when the script instance is being loaded
     private void Awake()
@@ -32,7 +34,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // Check for the pause button press in this example, we use the Escape key
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (InputController.Instance.Player1Actions.menuAction.WasPressed || InputController.Instance.Player2Actions.menuAction.WasPressed)
         {
             if (isGamePaused)
             {
@@ -64,10 +66,17 @@ public class GameManager : MonoBehaviour
         OnGameResumed?.Invoke();
     }
 
+    public void GameOver()
+    {
+        Time.timeScale = 0f;
+        OnGameOver?.Invoke();
+    }
+
     public void ResetGame()
     {
         DOTween.KillAll();
         UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
-     
+
     }
+
 }

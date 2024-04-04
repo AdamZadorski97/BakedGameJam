@@ -62,15 +62,15 @@ public class MenuController : MonoBehaviour
         {
             return;
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (InputController.Instance.Player1Actions.menuUpAction.WasPressed || InputController.Instance.Player2Actions.menuUpAction.WasPressed)
         {
             NavigateMenu(-1);
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (InputController.Instance.Player1Actions.menuDownAction.WasPressed || InputController.Instance.Player2Actions.menuDownAction.WasPressed)
         {
             NavigateMenu(1);
         }
-        else if (Input.GetKeyDown(KeyCode.Return)) // Enter key
+        if (InputController.Instance.Player1Actions.menuEnterAction.WasPressed || InputController.Instance.Player2Actions.menuEnterAction.WasPressed)
         {
             SelectButton(selectedButtonTagPair);
         }
