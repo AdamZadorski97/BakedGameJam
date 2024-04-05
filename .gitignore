@@ -9,7 +9,8 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
-
+/ Assets/Editor/x64/Bakery/
+/ Assets/Bakery
 # Visual Studio cache directory
 /Assets/CME_visualAssets
 
