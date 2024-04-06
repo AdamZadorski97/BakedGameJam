@@ -26,5 +26,13 @@ public class InteractorController : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit(Collider other) 
+    {
+        if (other != null && other.GetComponent<PlayerController>())
+        {
+            other.GetComponent<PlayerController>().tempInteractorController = null;
+        }
+    }
+
 
 }
