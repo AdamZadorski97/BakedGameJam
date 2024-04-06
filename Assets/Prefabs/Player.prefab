@@ -129,7 +129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerID: 1
   rb: {fileID: 501002288674117191}
-  moveSpeed: 5
+  moveSpeed: 3
   rotationSpeed: 10
   jumpForce: 5
   groundCheck: {fileID: 6353117662240053907}
@@ -141,6 +141,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   animator: {fileID: 1176963246868286118}
+  canJump: 0
+  canRotate: 1
+  tempInteractorController: {fileID: 0}
 --- !u!136 &7535765774414518120
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -148,7 +151,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3367863428318331027}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 711e913cc1efe504798ef01a9605f1f8, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
