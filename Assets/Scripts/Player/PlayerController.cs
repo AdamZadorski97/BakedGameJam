@@ -23,6 +23,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask wallMask;
     [SerializeField] private Animator animator;
     private bool isGrounded;
+    [SerializeField] private bool canJump;
+    public bool canRotate;
+    public InteractorController tempInteractorController;
+    private bool interact;
+    private Quaternion lastIntendedRotation;
 
     private void Update()
     {
@@ -39,6 +44,10 @@ public class PlayerController : MonoBehaviour
             {
                 Jump();
             }
+            if(InputController.Instance.Player1Actions.interactionAction.WasPressed && tempInteractorController!=null)
+            {
+                tempInteractorController.OnInteract(this);
+            }
         }
         else if (playerID == 2)
         {
@@ -48,6 +57,10 @@ public class PlayerController : MonoBehaviour
             if (isGrounded && InputController.Instance.Player2Actions.jumpAction.WasPressed)
             {
                 Jump();
+            }
+            if (InputController.Instance.Player2Actions.interactionAction.WasPressed && tempInteractorController != null)
+            {
+                tempInteractorController.OnInteract(this);
             }
         }
 
@@ -64,24 +77,52 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsObstacleInFront())
+        if (canRotate)
         {
             rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
         }
-        
-
-        // Determine the rotation direction based on second stick input or movement input
-        Vector3 intendedDirection = lookInput.magnitude > 0.1f ? new Vector3(lookInput.x, 0, lookInput.y) : moveInput;
-        if (intendedDirection != Vector3.zero)
+        else
         {
-            Quaternion targetRotation = Quaternion.LookRotation(intendedDirection);
-            rb.rotation = Quaternion.Lerp(rb.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+            Vector3 adjustedMoveInput = moveInput;
+            float forwardMovement = Vector3.Dot(moveInput, transform.forward);
+            adjustedMoveInput = transform.forward * forwardMovement;
+            rb.MovePosition(rb.position + adjustedMoveInput * moveSpeed * Time.fixedDeltaTime);
+        }
+
+        if (canRotate)
+        {
+            Vector3 intendedDirection = lookInput.magnitude > 0.1f ? new Vector3(lookInput.x, 0, lookInput.y) : moveInput;
+            if (intendedDirection != Vector3.zero)
+            {
+                // Update the last intended rotation based on the current input
+                lastIntendedRotation = Quaternion.LookRotation(intendedDirection);
+                rb.rotation = Quaternion.Lerp(rb.rotation, lastIntendedRotation, rotationSpeed * Time.fixedDeltaTime);
+            }
+            else
+            {
+                // If there's no input, snap to the last known intended rotation
+                SnapRotationToEnd();
+            }
+        }
+    }
+    private void SnapRotationToEnd()
+    {
+        if (lastIntendedRotation != Quaternion.identity) // Ensure there's a last known rotation to snap to
+        {
+            rb.rotation = Quaternion.RotateTowards(rb.rotation, lastIntendedRotation, rotationSpeed *2* Time.fixedDeltaTime);
         }
     }
 
     private void Jump()
     {
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        if (canJump)
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+    public void Interact()
+    {
+        tempInteractorController.OnInteract(this);
     }
 
 

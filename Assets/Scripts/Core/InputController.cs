@@ -12,8 +12,10 @@ public class InputController : MonoBehaviour
     private InputActions player2Actions;
     public InputActions Player1Actions => player1Actions;
     public InputActions Player2Actions => player2Actions;
+
     public Vector2 player1MoveValue;
     public Vector2 player2MoveValue;
+    public Vector2 player3MoveValue;
     [SerializeField] private float minDeadzone = .3f;
     [SerializeField] private float maxDeadzone = 1;
     public InControlManager controlManager;
@@ -49,27 +51,23 @@ public class InputController : MonoBehaviour
     }
     private Vector2 MoveValue(InputActions actions)
     {
-        //float horizontalValue = Utility.ApplyDeadZone(actions.moveAction.Value.x, minDeadzone, maxDeadzone) != 0 ? Mathf.Sign(actions.moveAction.Value.x) : 0;
-        //float verticalValue = Utility.ApplyDeadZone(actions.moveAction.Value.y, minDeadzone, maxDeadzone) != 0 ? Mathf.Sign(actions.moveAction.Value.y) : 0;
-        //return new Vector2(horizontalValue, verticalValue);
+        float horizontalValue = Utility.ApplyDeadZone(actions.moveAction.Value.x, minDeadzone, maxDeadzone) != 0 ? Mathf.Sign(actions.moveAction.Value.x) : 0;
+        float verticalValue = Utility.ApplyDeadZone(actions.moveAction.Value.y, minDeadzone, maxDeadzone) != 0 ? Mathf.Sign(actions.moveAction.Value.y) : 0;
+        return new Vector2(horizontalValue, verticalValue);
 
-        float horizontalValue = Utility.ApplyDeadZone(actions.moveAction.Value.x, minDeadzone, maxDeadzone);
-        float verticalValue = Utility.ApplyDeadZone(actions.moveAction.Value.y, minDeadzone, maxDeadzone);
+        //float horizontalValue = Utility.ApplyDeadZone(actions.moveAction.Value.x, minDeadzone, maxDeadzone);
+        //float verticalValue = Utility.ApplyDeadZone(actions.moveAction.Value.y, minDeadzone, maxDeadzone);
 
-        // Normalize the resultant vector to ensure consistent movement speed in all directions
-        Vector2 moveVector = new Vector2(horizontalValue, verticalValue);
-        if (moveVector.sqrMagnitude > 1)
-        {
-            moveVector.Normalize();
-        }
+        //// Normalize the resultant vector to ensure consistent movement speed in all directions
+        //Vector2 moveVector = new Vector2(horizontalValue, verticalValue);
+        //if (moveVector.sqrMagnitude > 1)
+        //{
+        //    moveVector.Normalize();
+        //}
 
-        return moveVector;
+        //return moveVector;
     }
 
-    public void CheckKey()
-    {
-   Debug.Log(controlManager) ;
-    }
 
     private void Awake()
     {
@@ -96,6 +94,7 @@ public class InputActions : PlayerActionSet
 {
     public PlayerAction menuAction;
     public PlayerAction jumpAction;
+    public PlayerAction interactionAction;
     public PlayerTwoAxisAction moveAction;
     public PlayerTwoAxisAction lookAction;
 
@@ -128,6 +127,7 @@ public class InputActions : PlayerActionSet
         goUpAction = CreatePlayerAction("Go Up");
         goDownAction = CreatePlayerAction("Go Down");
         jumpAction = CreatePlayerAction("Jump");
+        interactionAction = CreatePlayerAction("Interaction");
         //Look
         lookLeftAction = CreatePlayerAction("Look Left");
         lookRightAction = CreatePlayerAction("Look Right");
@@ -187,6 +187,9 @@ public class InputActions : PlayerActionSet
 
         playerActions.jumpAction.AddDefaultBinding(bindingsScriptable.GetBinding("Jump").key);
         playerActions.jumpAction.AddDefaultBinding(bindingsScriptable.GetBinding("Jump").inputControlType);
+
+        playerActions.interactionAction.AddDefaultBinding(bindingsScriptable.GetBinding("Interaction").key);
+        playerActions.interactionAction.AddDefaultBinding(bindingsScriptable.GetBinding("Interaction").inputControlType);
 
         playerActions.moveAction = playerActions.CreateTwoAxisPlayerAction(playerActions.goLeftAction, playerActions.goRightAction, playerActions.goDownAction, playerActions.goUpAction);
         playerActions.lookAction = playerActions.CreateTwoAxisPlayerAction(playerActions.lookLeftAction, playerActions.lookRightAction, playerActions.lookDownAction, playerActions.lookUpAction);
