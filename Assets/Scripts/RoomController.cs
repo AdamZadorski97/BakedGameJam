@@ -6,19 +6,16 @@ public class RoomController : MonoBehaviour
 {
     public List<PlayerController> playerControllers = new List<PlayerController>();
     public List<Renderer> wallsToFade = new List<Renderer>();
+    public Material transparentMaterial; // Assign this material in the Inspector
     private float fadeDuration = 0.5f;
-    private float targetOpacity = 0.1f;
-    private Dictionary<Renderer, Color> originalColors = new Dictionary<Renderer, Color>();
+    private Dictionary<Renderer, Material> originalMaterials = new Dictionary<Renderer, Material>();
 
     private void Start()
     {
-        // Remember the original color (including opacity) of each wall
+        // Remember the original material of each wall
         foreach (Renderer wallRenderer in wallsToFade)
         {
-            if (wallRenderer.material.HasProperty("_BaseColor"))
-            {
-                originalColors[wallRenderer] = wallRenderer.material.GetColor("_BaseColor");
-            }
+            originalMaterials[wallRenderer] = wallRenderer.material;
         }
     }
 
@@ -30,7 +27,7 @@ public class RoomController : MonoBehaviour
             playerControllers.Add(enteringPlayer);
             if (playerControllers.Count == 1)
             {
-                FadeWalls(targetOpacity);
+                FadeWalls();
             }
         }
     }
@@ -43,34 +40,26 @@ public class RoomController : MonoBehaviour
             playerControllers.Remove(exitingPlayer);
             if (playerControllers.Count == 0)
             {
-                RestoreWallsColor();
+                RestoreWallsMaterial();
             }
         }
     }
 
-    private void FadeWalls(float targetOpacity)
+    private void FadeWalls()
     {
         foreach (Renderer wallRenderer in wallsToFade)
         {
-            if (wallRenderer.material.HasProperty("_BaseColor"))
-            {
-                Color currentColor = wallRenderer.material.GetColor("_BaseColor");
-                Color targetColor = new Color(currentColor.r, currentColor.g, currentColor.b, targetOpacity);
-                // Animate the color change
-                DOTween.To(() => wallRenderer.material.GetColor("_BaseColor"), x => wallRenderer.material.SetColor("_BaseColor", x), targetColor, fadeDuration);
-            }
+            // Immediately switch to the transparent material
+            wallRenderer.material = transparentMaterial;
         }
     }
 
-    private void RestoreWallsColor()
+    private void RestoreWallsMaterial()
     {
-        foreach (var wallEntry in originalColors)
+        foreach (var wallEntry in originalMaterials)
         {
-            if (wallEntry.Key.material.HasProperty("_BaseColor"))
-            {
-                // Animate the color change back to the original color
-                DOTween.To(() => wallEntry.Key.material.GetColor("_BaseColor"), x => wallEntry.Key.material.SetColor("_BaseColor", x), wallEntry.Value, fadeDuration);
-            }
+            // Restore the original material
+            wallEntry.Key.material = wallEntry.Value;
         }
     }
 }
