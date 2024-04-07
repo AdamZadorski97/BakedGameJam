@@ -23,10 +23,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask wallMask;
     [SerializeField] private Animator animator;
     private bool isGrounded;
-    private bool isCrowling;
+    public bool isCrouch;
     [SerializeField] private bool canJump;
-    [SerializeField] private bool canCrowl;
+    [SerializeField] private bool canCrouch;
     public bool canRotate;
+    public bool canMoveObjects;
     public InteractorController tempInteractorController;
     private bool interact;
     private Quaternion lastIntendedRotation;
@@ -52,7 +53,7 @@ public class PlayerController : MonoBehaviour
             }
             if (InputController.Instance.Player1Actions.crowlAction.WasPressed)
             {
-                Crowl();
+                Crouch();
             }
         }
         else if (playerID == 2)
@@ -67,6 +68,10 @@ public class PlayerController : MonoBehaviour
             if (InputController.Instance.Player2Actions.interactionAction.WasPressed && tempInteractorController != null)
             {
                 tempInteractorController.OnInteract(this);
+            }
+            if (InputController.Instance.Player2Actions.crowlAction.WasPressed)
+            {
+                Crouch();
             }
         }
 
@@ -128,19 +133,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Crowl()
+    private void Crouch()
     {
-        if(canCrowl)
+        if(canCrouch)
         {
-            if (isCrowling)
+            if (isCrouch)
             {
-                isCrowling = false;
+                isCrouch = false;
                 animator.SetBool("isCrouch", false);
             }
             else
             {
-                isCrowling = true;
-                animator.SetBool("isCrouch", false);
+                isCrouch = true;
+                animator.SetBool("isCrouch", true);
             }
         }
     }
