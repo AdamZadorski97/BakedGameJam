@@ -1,7 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening; // Import the DOTween namespace
+using DG.Tweening;
 
 public class GateController : MonoBehaviour
 {
@@ -10,7 +9,8 @@ public class GateController : MonoBehaviour
     [SerializeField] private Transform gateTransform;
     [SerializeField] private float duration = 2f; // Duration of the animation
     private bool isGateOpened;
-    private Sequence gateMoveSequence;
+    private Coroutine stayOpenCoroutine;
+
     public void SwitchGate()
     {
         if (isGateOpened)
@@ -21,20 +21,32 @@ public class GateController : MonoBehaviour
 
     public void OpenGate()
     {
-        // Use DOTween to move the gate to the opened position
-        if (gateMoveSequence != null)
-            gateMoveSequence.Kill();
-        gateMoveSequence = DOTween.Sequence();
+        if (!isGateOpened)
+        {
+            // Use DOTween to move the gate to the opened position
+            isGateOpened = true;
+            gateTransform.DOLocalMove(gatePositionOpened, duration).SetEase(Ease.InOutQuad);
+        }
 
-        gateMoveSequence.Append(gateTransform.DOLocalMove(gatePositionOpened, duration).SetEase(Ease.InOutQuad)); // Choose an easing function that suits the movement
+        // Restart the coroutine to keep the gate open for 5 more seconds
+        if (stayOpenCoroutine != null)
+            StopCoroutine(stayOpenCoroutine);
+        stayOpenCoroutine = StartCoroutine(KeepGateOpen());
+    }
+
+    IEnumerator KeepGateOpen()
+    {
+        yield return new WaitForSeconds(2f);
+        CloseGate();
     }
 
     public void CloseGate()
     {
-        // Use DOTween to move the gate to the closed position
-        if (gateMoveSequence != null)
-            gateMoveSequence.Kill();
-        gateMoveSequence = DOTween.Sequence();
-        gateMoveSequence.Append(gateTransform.DOLocalMove(gatePositionClosed, duration).SetEase(Ease.InOutQuad)); // Choose an easing function that suits the movement
+        if (isGateOpened)
+        {
+            // Use DOTween to move the gate to the closed position
+            isGateOpened = false;
+            gateTransform.DOLocalMove(gatePositionClosed, duration).SetEase(Ease.InOutQuad);
+        }
     }
 }

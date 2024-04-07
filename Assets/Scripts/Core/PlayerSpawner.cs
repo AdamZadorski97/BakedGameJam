@@ -7,10 +7,11 @@ public class PlayerSpawner : MonoBehaviour
 {
     [SerializeField] private SplitScreenEffect splitScreenEffect;
     [SerializeField] private Transform spawnPoint;
-    public GameObject playerPrefab; // Assign in the inspector
+    public GameObject playerPrefab1; // Assign first player prefab in the inspector
+    public GameObject playerPrefab2; // Assign second player prefab in the inspector
     public GameObject cameraPrefab;
     private List<GameObject> spawnedPlayers = new List<GameObject>();
-    private int playersCount;
+    private int playersCount = 0;
 
     private static PlayerSpawner _instance;
     public static PlayerSpawner Instance { get { return _instance; } }
@@ -57,6 +58,8 @@ public class PlayerSpawner : MonoBehaviour
     {
         playersCount++;
 
+        // Choose prefab based on playersCount
+        GameObject playerPrefab = playersCount == 1 ? playerPrefab1 : playerPrefab2;
         GameObject newPlayer = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity);
         PlayerController playerController = newPlayer.GetComponent<PlayerController>();
         GameObject newCamera = Instantiate(cameraPrefab, spawnPoint.position, Quaternion.identity);

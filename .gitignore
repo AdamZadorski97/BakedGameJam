@@ -110,3 +110,6 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+Assets/Szymon/key.fbx.meta
+Assets/Szymon/shelf.fbx
+Assets/Szymon/shelf.fbx.meta

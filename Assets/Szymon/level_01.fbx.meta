@@ -30,7 +30,8 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    extraUserProperties: []
+    extraUserProperties:
+    - '#BAKERY{"meshName":["flor_01.005","Cube.017","wall_001.003","Cube.011","Cube.018","flor_01","flor_01.003","wall_004.001","flor_01.002","Cube.012","wall_002.003","wall_001.005","wall_001.004","wall_001.006","flor_01.001","Cube.022","Cube.009","Cube.016","wall_002.006","wall_002","wall_004.002","Cube.021","wall_002.002","Cube.015","Cylinder.007","Cylinder.006","Cylinder.005","Cylinder.004","Cylinder.003","Cylinder.002","Cylinder.001","Cylinder","wall_002.007","wall_001.002","wall_001","Cube.020","Cube.019","Cube.010","wall_002.005","Cube.014","wall_002.004","wall_001.001","wall_004","wall_002.001","Cube.013"],"padding":[6,34,4,14,34,6,6,7,6,14,7,6,5,5,4,34,10,34,7,7,7,34,7,34,53,53,53,53,53,53,53,53,8,7,7,34,34,14,7,14,4,7,7,11,14],"unwrapper":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}'
     clipAnimations: []
     isReadable: 0
   meshes:
@@ -48,7 +49,7 @@ ModelImporter:
     nodeNameCollisionStrategy: 1
     fileIdsGeneration: 2
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     keepQuads: 0
     weldVertices: 1

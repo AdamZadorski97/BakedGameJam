@@ -10,6 +10,12 @@ public class MovableController : MonoBehaviour
     public bool isColliding;
     public void OnInteract()
     {
+        if (!interactorController.playerController.canMoveObjects)
+        {
+            return;
+        }
+
+
         if (!isMoving)
         {
             isMoving = true;
