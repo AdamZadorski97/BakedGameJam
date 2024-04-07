@@ -93,6 +93,7 @@ public class InputController : MonoBehaviour
 public class InputActions : PlayerActionSet
 {
     public PlayerAction menuAction;
+    public PlayerAction crowlAction;
     public PlayerAction jumpAction;
     public PlayerAction interactionAction;
     public PlayerTwoAxisAction moveAction;
@@ -127,6 +128,7 @@ public class InputActions : PlayerActionSet
         goUpAction = CreatePlayerAction("Go Up");
         goDownAction = CreatePlayerAction("Go Down");
         jumpAction = CreatePlayerAction("Jump");
+        crowlAction = CreatePlayerAction("Crouch");
         interactionAction = CreatePlayerAction("Interaction");
         //Look
         lookLeftAction = CreatePlayerAction("Look Left");
@@ -187,6 +189,9 @@ public class InputActions : PlayerActionSet
 
         playerActions.jumpAction.AddDefaultBinding(bindingsScriptable.GetBinding("Jump").key);
         playerActions.jumpAction.AddDefaultBinding(bindingsScriptable.GetBinding("Jump").inputControlType);
+
+        playerActions.crowlAction.AddDefaultBinding(bindingsScriptable.GetBinding("Crouch").key);
+        playerActions.crowlAction.AddDefaultBinding(bindingsScriptable.GetBinding("Crouch").inputControlType);
 
         playerActions.interactionAction.AddDefaultBinding(bindingsScriptable.GetBinding("Interaction").key);
         playerActions.interactionAction.AddDefaultBinding(bindingsScriptable.GetBinding("Interaction").inputControlType);

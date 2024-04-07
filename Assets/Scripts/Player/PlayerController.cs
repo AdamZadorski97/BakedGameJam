@@ -23,12 +23,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask wallMask;
     [SerializeField] private Animator animator;
     private bool isGrounded;
+    private bool isCrowling;
     [SerializeField] private bool canJump;
+    [SerializeField] private bool canCrowl;
     public bool canRotate;
     public InteractorController tempInteractorController;
     private bool interact;
     private Quaternion lastIntendedRotation;
-
+    public bool hasKey;
     private void Update()
     {
         // Ground check
@@ -44,9 +46,13 @@ public class PlayerController : MonoBehaviour
             {
                 Jump();
             }
-            if(InputController.Instance.Player1Actions.interactionAction.WasPressed && tempInteractorController!=null)
+            if (InputController.Instance.Player1Actions.interactionAction.WasPressed && tempInteractorController != null)
             {
                 tempInteractorController.OnInteract(this);
+            }
+            if (InputController.Instance.Player1Actions.crowlAction.WasPressed)
+            {
+                Crowl();
             }
         }
         else if (playerID == 2)
@@ -79,14 +85,15 @@ public class PlayerController : MonoBehaviour
     {
         if (canRotate)
         {
-            rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
+            rb.MovePosition(rb.position + moveInput * moveSpeed * Time.deltaTime);
         }
         else
         {
             Vector3 adjustedMoveInput = moveInput;
             float forwardMovement = Vector3.Dot(moveInput, transform.forward);
             adjustedMoveInput = transform.forward * forwardMovement;
-            rb.MovePosition(rb.position + adjustedMoveInput * moveSpeed * Time.fixedDeltaTime);
+          //  if(IsObstacleInFront())
+            rb.MovePosition(rb.position + adjustedMoveInput * moveSpeed * Time.deltaTime);
         }
 
         if (canRotate)
@@ -120,37 +127,26 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
     }
+
+    private void Crowl()
+    {
+        if(canCrowl)
+        {
+            if (isCrowling)
+            {
+                isCrowling = false;
+                animator.SetBool("isCrouch", false);
+            }
+            else
+            {
+                isCrowling = true;
+                animator.SetBool("isCrouch", false);
+            }
+        }
+    }
+
     public void Interact()
     {
         tempInteractorController.OnInteract(this);
-    }
-
-
-    private bool IsObstacleInFront()
-    {
-        RaycastHit hit;
-        float checkDistance = 0.25f; // Adjust based on your needs
-        Vector3 direction = moveInput.normalized;
-
-        // Only check for obstacles if there's input from the player
-        if (moveInput.magnitude > 0.1f)
-        {
-            Vector3 rayOrigin = transform.position - new Vector3(0, 0.2f, 0); // Slightly raise the ray origin to avoid ground collision
-
-            // Perform a raycast in front of the player
-            bool isHit = Physics.Raycast(rayOrigin, direction, out hit, checkDistance, wallMask);
-
-            // Debugging: Draw the ray in the Scene view
-            Debug.DrawRay(rayOrigin, direction * checkDistance, isHit ? Color.red : Color.green);
-
-            if (isHit)
-            {
-                // Debugging: Log hit information
-                Debug.Log($"Obstacle hit at {hit.point}, distance: {hit.distance}, hit object: {hit.collider.gameObject.name}");
-                return true; // An obstacle is in front of the player
-            }
-        }
-
-        return false; // No obstacle in front of the player
     }
 }
