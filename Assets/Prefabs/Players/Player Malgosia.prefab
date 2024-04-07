@@ -141,7 +141,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   animator: {fileID: 761994903556252451}
+  isCrouch: 1
   canJump: 1
+  canCrouch: 1
   canRotate: 1
   tempInteractorController: {fileID: 0}
   hasKey: 0
