@@ -31,7 +31,7 @@ public class PotController : MonoBehaviour
         if (rotateSequence != null)
             rotateSequence.Kill();
         rotateSequence = DOTween.Sequence();
-
+        GetComponent<AudioSource>().Play();
         rotateSequence.Append(pot.DOLocalRotate(targetRotation, rotateToTargetSpeed));
         rotateSequence.AppendCallback(() => key.gameObject.SetActive(true));
         rotateSequence.AppendCallback(() => key.transform.SetParent(null));

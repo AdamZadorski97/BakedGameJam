@@ -60,7 +60,7 @@ public class PlayerSpawner : MonoBehaviour
 
         // Choose prefab based on playersCount
         GameObject playerPrefab = playersCount == 1 ? playerPrefab1 : playerPrefab2;
-        GameObject newPlayer = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity);
+        GameObject newPlayer = Instantiate(playerPrefab, spawnPoint.position + new Vector3(0,0, -playersCount), Quaternion.identity);
         PlayerController playerController = newPlayer.GetComponent<PlayerController>();
         GameObject newCamera = Instantiate(cameraPrefab, spawnPoint.position, Quaternion.identity);
 

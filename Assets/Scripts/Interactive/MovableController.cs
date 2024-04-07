@@ -10,7 +10,7 @@ public class MovableController : MonoBehaviour
     public bool isColliding;
     public void OnInteract()
     {
-        if (!interactorController.playerController.canMoveObjects)
+        if (!interactorController.playerController.canMoveObjects && isMoving)
         {
             return;
         }
@@ -19,16 +19,18 @@ public class MovableController : MonoBehaviour
         if (!isMoving)
         {
             isMoving = true;
-
+            interactorController.playerController.Movable(true);
             // Calculate the position offset based on the current positions of the object and the player
             Vector3 positionOffset = transform.parent.transform.position - interactorController.playerController.transform.position;
-
+          
             // Transform the position offset by the inverse of the player's rotation to make it rotation-dependent
             offset = Quaternion.Inverse(interactorController.playerController.transform.rotation) * positionOffset;
             interactorController.playerController.canRotate = false;
         }
         else
         {
+            
+            interactorController.playerController.Movable(false);
             interactorController.playerController.canRotate = true;
             isMoving = false;
         }
@@ -43,7 +45,7 @@ public class MovableController : MonoBehaviour
                 // Apply the player's rotation to the offset before adding it to the player's position
                 Vector3 rotatedOffset = interactorController.playerController.transform.rotation * offset;
                 Vector3 desiredPosition = interactorController.playerController.transform.position + rotatedOffset;
-
+                interactorController.playerController.SnapRotationToEnd();
                 // Check for obstructions
                 RaycastHit hit;
                 if (!Physics.Linecast(transform.parent.position, desiredPosition, out hit))

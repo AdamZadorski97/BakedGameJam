@@ -10,7 +10,7 @@ public class GateController : MonoBehaviour
     [SerializeField] private float duration = 2f; // Duration of the animation
     private bool isGateOpened;
     private Coroutine stayOpenCoroutine;
-
+   
     public void SwitchGate()
     {
         if (isGateOpened)
@@ -23,7 +23,10 @@ public class GateController : MonoBehaviour
     {
         if (!isGateOpened)
         {
+            InputController.Instance.Vibrate(1f, InputController.Instance.Player1Actions, 2f);
+            InputController.Instance.Vibrate(1f, InputController.Instance.Player2Actions, 2f);
             // Use DOTween to move the gate to the opened position
+            GetComponent<AudioSource>().Play();
             isGateOpened = true;
             gateTransform.DOLocalMove(gatePositionOpened, duration).SetEase(Ease.InOutQuad);
         }
@@ -36,7 +39,7 @@ public class GateController : MonoBehaviour
 
     IEnumerator KeepGateOpen()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3.5f);
         CloseGate();
     }
 
@@ -45,7 +48,10 @@ public class GateController : MonoBehaviour
         if (isGateOpened)
         {
             // Use DOTween to move the gate to the closed position
+            InputController.Instance.Vibrate(1f, InputController.Instance.Player1Actions, 2f);
+            InputController.Instance.Vibrate(1f, InputController.Instance.Player2Actions, 2f);
             isGateOpened = false;
+            GetComponent<AudioSource>().Play();
             gateTransform.DOLocalMove(gatePositionClosed, duration).SetEase(Ease.InOutQuad);
         }
     }

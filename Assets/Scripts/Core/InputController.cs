@@ -49,6 +49,20 @@ public class InputController : MonoBehaviour
             player2Actions.Device = InputManager.Devices[1];
         }
     }
+
+    public void Vibrate(float intencity,  InputActions actions, float time)
+    {
+        actions.Device.Vibrate(intencity, intencity);
+        StartCoroutine(OnParticleSystemStopped(actions, time));
+    }
+
+    IEnumerator OnParticleSystemStopped(InputActions actions, float time)
+    {
+        yield return new WaitForSeconds(time);
+        actions.Device.StopVibration();
+    }
+
+
     private Vector2 MoveValue(InputActions actions)
     {
         float horizontalValue = Utility.ApplyDeadZone(actions.moveAction.Value.x, minDeadzone, maxDeadzone) != 0 ? Mathf.Sign(actions.moveAction.Value.x) : 0;
@@ -81,7 +95,7 @@ public class InputController : MonoBehaviour
             Destroy(gameObject);
         }
 
-       
+
     }
 
     private void Start()
@@ -136,11 +150,11 @@ public class InputActions : PlayerActionSet
         lookUpAction = CreatePlayerAction("Look Up");
         lookDownAction = CreatePlayerAction("Look Down");
     }
-    
+
     public static InputActions CreateWithDefaultBindings(float minDeadzone, float maxDeadzone)
     {
         var playerActions = new InputActions();
-        BindingProperties bindingsScriptable  = ScriptableManager.Instance.bindingProperties;
+        BindingProperties bindingsScriptable = ScriptableManager.Instance.bindingProperties;
 
         playerActions.menuAction.AddDefaultBinding(bindingsScriptable.GetBinding("Menu").key);
         playerActions.menuAction.AddDefaultBinding(bindingsScriptable.GetBinding("Menu").inputControlType);

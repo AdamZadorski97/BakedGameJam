@@ -271,6 +271,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   playerController: {fileID: 0}
+  isOnlyForMan: 1
 --- !u!114 &4137368112853408410
 MonoBehaviour:
   m_ObjectHideFlags: 0

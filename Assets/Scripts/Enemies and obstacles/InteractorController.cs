@@ -6,6 +6,7 @@ public class InteractorController : MonoBehaviour
 {
     public UnityEvent OnInteractEvet;
     public PlayerController playerController;
+    public bool isOnlyForMan;
 
     public void OnInteract(PlayerController _playerController)
     {
@@ -20,9 +21,19 @@ public class InteractorController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other != null && other.GetComponent<PlayerController>())
+        
+
+        if(other != null && other.GetComponent<PlayerController>() && other.GetComponent<PlayerController>())
         {
-            other.GetComponent<PlayerController>().tempInteractorController = this;
+            if (isOnlyForMan && other.GetComponent<PlayerController>().isMan)
+            {
+                other.GetComponent<PlayerController>().tempInteractorController = this;
+            }
+            else if(!isOnlyForMan)
+            {
+                other.GetComponent<PlayerController>().tempInteractorController = this;
+            }
+
         }
     }
 
@@ -30,7 +41,14 @@ public class InteractorController : MonoBehaviour
     {
         if (other != null && other.GetComponent<PlayerController>())
         {
-            other.GetComponent<PlayerController>().tempInteractorController = null;
+            if (isOnlyForMan && other.GetComponent<PlayerController>().isMan)
+            {
+                other.GetComponent<PlayerController>().tempInteractorController = null;
+            }
+            else if (!isOnlyForMan)
+            {
+                other.GetComponent<PlayerController>().tempInteractorController = null;
+            }
         }
     }
 

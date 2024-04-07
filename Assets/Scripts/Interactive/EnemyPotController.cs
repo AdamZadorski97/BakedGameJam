@@ -16,6 +16,7 @@ public class EnemyPotController : MonoBehaviour
     public AnimationCurve attackCurve;
     private bool canAttack = true;
     public Vector3 endParticleOffset;
+  
 
     private void Update()
     {
@@ -30,6 +31,7 @@ public class EnemyPotController : MonoBehaviour
         canAttack = false;
         foreach (PlayerController player in playerControllers)
         {
+            GetComponent<AudioSource>().Play();
             GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPosition.position, Quaternion.identity);
             Vector3 targetPosition = player.transform.position + endParticleOffset;
 
